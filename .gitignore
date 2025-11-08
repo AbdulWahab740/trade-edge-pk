@@ -1,0 +1,8 @@
+.env
+__pycache__
+/agents/__pycache__
+/tools/__pycache__
+/utils/__pycache__
+/exports/*
+/imports/*
+/data_env/*
