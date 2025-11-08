@@ -20,7 +20,7 @@ except Exception:
 # Load CSV from project root (works regardless of where script is run from)
 project_root = Path(__file__).parent.parent
 csv_file = project_root / "trade_data.csv"
-print(f"✅ Loading {csv_file}...")
+
 df = pd.read_csv(csv_file)
 
 
@@ -373,27 +373,4 @@ def chart_agent(
     except Exception as e:
         return json.dumps({"error": str(e)})
 
-        
-if __name__ == "__main__":
-    print(chart_agent(
-  user_request="Show import value trend of TEXTILE MACHINERY over months",
-  pandas_query="df[df['commodity'].str.contains('textile', case=False, na=False)][['month','rupees_2025']]",
-  max_rows=100
-))
-# ------------------------------
-# Example usage snippet (not executed within the module)
-# ------------------------------
-"""
-# Example 1: Provide a safe pandas query (recommended)
-pandas_q = "df[df['Commodity']=='WHEAT'][['Month','Quantity_2025']].sort_values('Month')"
-print(chart_agent(user_request="Wheat import trend 2024-25", pandas_query=pandas_q))
-
-# Example 2: Let the agent infer from global df (fallback)
-print(chart_agent(user_request="Plot top 10 commodities by Dollar_2025", explicit_chart_type="bar"))
-
-# In your server route:
-# 1) call your CSV agent to get a pandas_query for the user's NL request (better)
-# 2) call chart_agent(pandas_query=..., user_request=..., return_image=False)
-# 3) send chart_json to frontend and render with Plotly
-"""
-
+   

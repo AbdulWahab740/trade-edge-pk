@@ -108,7 +108,3 @@ df['month'] == '2025-06' & df['tradetype'] == 'Import'
         if isinstance(result, dict):
             return result.get("output", "")
         return result
-
-
-if __name__ == "__main__":
-    print(graph_agent("Milk imports trend"))

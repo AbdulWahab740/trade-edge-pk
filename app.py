@@ -126,7 +126,6 @@ def query_economics_expert(query, conversation_history, dataset_context):
         return response_text
         
     except Exception as e:
-        print(f"❌ ECONOMICS EXPERT ERROR: {str(e)}")
         import traceback
         traceback.print_exc()
         
@@ -169,8 +168,6 @@ async def analyze(request: ChatAnalystRequest):
             elif "output" in graph_response and isinstance(graph_response["output"], str):
                 chart_data = _extract_chart_json_from_text(graph_response["output"])
 
-        print("Chart data (parsed): ", chart_data if chart_data else "<None>")
-        
         return AgentResponse(
             success=True,
             response=csv_response,

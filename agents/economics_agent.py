@@ -130,7 +130,6 @@ def invoke_economics_agent(
     Returns:
         Economics analysis response
     """
-    print("IGI Economics Agent")
     agent = get_economics_agent()
     
     messages = []
@@ -165,15 +164,3 @@ def invoke_economics_agent(
         return response_dict
     else :
         return "I couldn't generate an analysis. Please try again."
-
-if __name__ == "__main__":
-    # Test
-    import json
-    # 1. The result is a JSON-formatted string
-    response_json_string = invoke_economics_agent(
-        query="What are the economic implications of Food Group imports?",
-        dataset_context="Food Group imports: 50M PKR in June 2025, up 12% MoM"
-    )
-    
-    print("\n--- Raw JSON String Response ---")
-    print(response_json_string)

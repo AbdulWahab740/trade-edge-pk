@@ -377,7 +377,3 @@ Keep it simple. One query = one calculation. Multiple queries = complete analysi
     except Exception as e:
         return f"Error: {str(e)}"
 
-
-if __name__ == "__main__":
-    query = "what are the export trends of Food group in 2025?"
-    print(csv_analyzer(query))
