@@ -11,7 +11,6 @@ from agents.csv_agent import csv_analyzer
 from agents.economics_agent import invoke_economics_agent
 from agents.graph_agent import graph_agent
 from utils.extract_json import _extract_chart_json_from_text
-from utils.normalize_plots import normalize_plotly_chart
 # Add the project root to the path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
@@ -25,7 +24,7 @@ app = FastAPI(
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:3000"],
+    allow_origins=["https://trade-edge-pk.vercel.app","https://trade-edge-pr18bvp5o-abdulwahab740s-projects.vercel.app",],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

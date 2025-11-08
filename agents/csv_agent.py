@@ -1,8 +1,13 @@
-import os 
-os.environ["COHERE_API_KEY"] = "oM4BkpsY3NEdlFxktdmYEtOHPJ7TBHJD5WcvvC2e"
 
+from dotenv import load_dotenv
+import os
+
+load_dotenv()  # loads only if .env exists locally
+
+COHERE_API_KEY = os.getenv("COHERE_API_KEY")
 import pandas as pd
-from langchain_cohere import ChatCohere
+# from langchain_cohere import ChatCohere
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.tools import tool
 from langchain.agents import AgentExecutor, create_tool_calling_agent
 from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder
@@ -14,19 +19,31 @@ from typing import Any
 # Load CSV from project root (works regardless of where script is run from)
 project_root = Path(__file__).parent.parent
 csv_file = project_root / "trade_data.csv"
-print(f"✅ Loading {csv_file}...")
+
 df = pd.read_csv(csv_file)
 # Clean whitespace
 for col in df.select_dtypes(include=['object']).columns:
     df[col] = df[col].str.strip()
 
-print(f"✅ Loaded: {df.shape[0]} rows × {df.shape[1]} columns")
-print(f"Columns: {df.columns.tolist()}\n")
-
-
 # ---- Configuration ----
 # Quick SQL keyword detection to prevent accidental SQL-like queries
 SQL_KEYWORDS = {"SELECT", "FROM", "WHERE", "JOIN", "ORDER BY", "LIMIT", "GROUP BY"}
+
+GEMINI_API_KEY = "AIzaSyA6Qt6_n4LBwX9G03h3kzi0Eoh8RYH4KYE"
+def load_llm():
+    """Loads and caches the LLM for use in the application."""
+    if not GEMINI_API_KEY:
+        return "API key not avaliable"
+    try:
+        llm = ChatGoogleGenerativeAI(
+            model="gemini-2.0-flash",
+            temperature=0.5,
+            max_tokens=2000,
+            api_key=GEMINI_API_KEY
+        )
+        return llm
+    except Exception as e:
+        pass
 
 # ---- Tools ----
 @tool
@@ -179,8 +196,8 @@ def csv_analyzer(query: str, conversation_history: Optional[List] = None) -> str
     try:
         tools = [get_schema_for_csv, csv_query]
 
-        llm = ChatCohere(model="command-r7b-12-2024", temperature=0)
-
+        llm = ChatCohere(model="command-r7b-12-2024", temperature=0.2)
+        # llm = load_llm()
         # CRITICAL: Very explicit prompt about pandas vs SQL
         prompt = ChatPromptTemplate.from_messages([
             ("system", """
