@@ -24,7 +24,8 @@ app = FastAPI(
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://trade-edge-pk.vercel.app","https://trade-edge-pr18bvp5o-abdulwahab740s-projects.vercel.app",],
+    allow_origins = ["*"],
+    # allow_origins=["https://trade-edge-pk.vercel.app","https://trade-edge-pr18bvp5o-abdulwahab740s-projects.vercel.app",],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
