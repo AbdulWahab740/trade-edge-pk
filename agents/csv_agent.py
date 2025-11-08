@@ -6,14 +6,12 @@ load_dotenv()  # loads only if .env exists locally
 
 COHERE_API_KEY = os.getenv("COHERE_API_KEY")
 import pandas as pd
-# from langchain_cohere import ChatCohere
-from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_cohere import ChatCohere
 from langchain.tools import tool
 from langchain.agents import AgentExecutor, create_tool_calling_agent
 from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder
 from typing import Optional, List, Dict, Any
 from pathlib import Path
-from typing import Any
 
 # ---- LOAD DATA ----
 # Load CSV from project root (works regardless of where script is run from)
@@ -28,22 +26,6 @@ for col in df.select_dtypes(include=['object']).columns:
 # ---- Configuration ----
 # Quick SQL keyword detection to prevent accidental SQL-like queries
 SQL_KEYWORDS = {"SELECT", "FROM", "WHERE", "JOIN", "ORDER BY", "LIMIT", "GROUP BY"}
-
-GEMINI_API_KEY = "AIzaSyA6Qt6_n4LBwX9G03h3kzi0Eoh8RYH4KYE"
-def load_llm():
-    """Loads and caches the LLM for use in the application."""
-    if not GEMINI_API_KEY:
-        return "API key not avaliable"
-    try:
-        llm = ChatGoogleGenerativeAI(
-            model="gemini-2.0-flash",
-            temperature=0.5,
-            max_tokens=2000,
-            api_key=GEMINI_API_KEY
-        )
-        return llm
-    except Exception as e:
-        pass
 
 # ---- Tools ----
 @tool
@@ -69,9 +51,6 @@ def sanitize_and_eval(query: str, local_df: pd.DataFrame) -> Any:
     if not query.startswith("df"):
         raise ValueError("Query must start with 'df' (the DataFrame variable).")
 
-    # Check for common Python 'and' usage (should be '&' for pandas)
-    # Look for patterns like: df[...] and df[...] or df[...] and condition
-    # Only flag if 'and' appears after a closing bracket or before df/condition
     import re
     if re.search(r'\]\s+and\s+', query) or re.search(r'\]\s+and\(', query) or re.search(r'and\s+df\[', query):
         raise ValueError(
@@ -108,13 +87,6 @@ def sanitize_and_eval(query: str, local_df: pd.DataFrame) -> Any:
     except Exception as e:
         raise ValueError(f"Pandas evaluation error: {e}")
     return result
-
-def _call_tool_function(maybe_tool, *args, **kwargs):
-    """Call underlying function even if it's decorated as a LangChain tool."""
-    func = getattr(maybe_tool, "func", None)
-    if callable(func):
-        return func(*args, **kwargs)
-    return maybe_tool(*args, **kwargs)
 
 @tool
 def csv_query(
@@ -214,18 +186,13 @@ Your job: Answer questions with SIMPLE pandas queries and provide clear summarie
 - Value columns: `quantity_2025`, `rupees_2025`, `dollar_2025`
 - ALWAYS call `get_schema_for_csv()` first!
 
----
+Query Rules
 
-### ✅ Query Rules
+1. **Simple syntax** - Use basic pandas operations
+2. **No comments** - Don't add # comments in queries
+3. **No variables** - Don't try to create variables like `total_rupees = ...`
 
-1. **ONE query at a time** - Never combine multiple statements
-2. **Simple syntax** - Use basic pandas operations
-3. **No comments** - Don't add # comments in queries
-4. **No variables** - Don't try to create variables like `total_rupees = ...`
-
----
-
-### 💡 Good Query Patterns
+ Good Query Patterns
 
 **Filtering:**
 ```python
@@ -246,10 +213,7 @@ df['rupees_2025'].mean()
 df.nlargest(5, 'rupees_2025')[['commodity', 'rupees_2025']]
 df.groupby('group')['rupees_2025'].sum().nlargest(5)
 ```
-
----
-
-### 🎯 Analysis Approach
+Analysis Approach
 
 For each question, run **3-5 SEPARATE simple queries**:
 
@@ -266,39 +230,29 @@ df[(df['tradetype'] == 'Export') & (df['group'] == 'Food Group')]['rupees_2025']
 if asked a single value to return like valued import in June 2025?
 df[(df['tradetype'] == 'Import') & (df['month'] == '2025-06')][['commodity', 'rupees_2025']].sort_values(by='rupees_2025', ascending=False).head(1)
 ```
-
-Query 3: Count entries
-```python
-df[(df['tradetype'] == 'Export') & (df['group'] == 'Food Group')].shape[0]
-```
-
-Query 4: Get top items
-```python
-df[(df['tradetype'] == 'Export') & (df['group'] == 'Food Group')].nlargest(3, 'rupees_2025')[['commodity', 'rupees_2025']]
-```
 **Keep It Simple:**
    - Use `df[filters][['month','rupees_2025']]` or `[['month','dollar_2025']]` depending on what’s relevant.
    - Only add month filters if the user explicitly mentions months (e.g., "in June 2025").
    - If the user asks for a **trend**, include `'month'` and a **value column** (`'rupees_2025'` or `'dollar_2025'`).
    - Default to `'rupees_2025'` unless the user mentions dollar or USD.
-   
----
+   - Always respond with the month in the format 'YYYY-MM' if the user query isn't specific
 
-### 📋 Response Format
+For example , if user ask to return the analysis of any commodity that is performing best in 2025 so tell which month was best or like stuffs!
+
+Response Format
 
 After running queries, format like this:
 
 FOOD GROUP EXPORTS ANALYSIS
 
 Data Overview:
-[Show top 5 rows from Query 1]
+[Show top 5 rows from Query 1] # with month if possible to have in structured way!
 
 Key Metrics you must need to find if applicable:
-- Total Value: PKR X 
+- Total Value: PKR XYZ (calculate from total value column)
 - Total Items: Y entries 
 - Average Value: PKR Z (calculate from total/count)
 - Best Performing Commodity: XYZ (highest value)
-
 
 Summary for Economics Expert:
 Food Group exports total PKR X across Y items. Top 3 commodities account for A% of total value. [Add 1-2 more insights]
@@ -322,9 +276,8 @@ average = total / count
 df[df['month'] == '2025-06']['rupees_2025'].sum()
 ```
 double check the pandas rules!
----
 
-### 🔍 Workflow
+Workflow:
 
 1. Call `get_schema_for_csv()` to check columns
 2. after checking columns, perform the analysis based on the user query
