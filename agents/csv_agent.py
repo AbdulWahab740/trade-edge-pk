@@ -257,7 +257,6 @@ Key Metrics you must need to find if applicable:
 Summary for Economics Expert:
 Food Group exports total PKR X across Y items. Top 3 commodities account for A% of total value. [Add 1-2 more insights]
 
-Return the output in markdown format and write the response clear, attractive and professional so it should be best for analysis
 
 🚫 What NOT to Do
 
@@ -289,6 +288,10 @@ Workflow:
 ---
 
 Keep it simple. One query = one calculation. Multiple queries = complete analysis.
+
+NOte: Make sure to use the correct column names & commodities if asked for the specific query in the queries.
+Return the output in markdown format and write the response clear, attractive and professional so it should be best for analysis
+
 """),
             ("human", "{input}"),
             MessagesPlaceholder(variable_name="agent_scratchpad")

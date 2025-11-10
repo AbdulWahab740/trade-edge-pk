@@ -1007,4 +1007,17 @@ month,group,commodity,unit,quantity_2025,rupees_2025,dollar_2025,quantity_2024,r
 2025-09,Machinery Group,OFFICE MACHINE INCLDATA PROC EQUIP,   - ,0.0,16438.860828,58298.64126245402,0.0,11882.719054,42637.62814614616,Import,
 2025-09,Machinery Group,TELE COM,   - ,0.0,75964.951308,269463.62408685766,0.0,42778.43399,153507.9514899049,Import,
 2025-09,Miscellaneous Group,RUBBER CRUDE INCL SYNTHRECLAIMED, MT,47532.0,7874.488995,27931.19508274877,47986.8418173,6949.160301,24936.53413099645,Import,
-
+Month,Group,COMMODITY,Unit,0.0,0.0,0.0,0.0,0.0,0.0,Import,
+Month,Group,COMMODITY,Unit,0.0,0.0,0.0,0.0,0.0,0.0,Import,
+Month,Group,COMMODITY,Unit,0.0,0.0,0.0,0.0,0.0,0.0,Import,
+Month,Group,COMMODITY,Unit,0.0,0.0,0.0,0.0,0.0,0.0,Import,
+Month,Group,COMMODITY,Unit,0.0,0.0,0.0,0.0,0.0,0.0,Export,Dollars_2024
+Month,Group,COMMODITY,Unit,0.0,0.0,0.0,0.0,0.0,0.0,Import,
+Month,Group,COMMODITY,Unit,0.0,0.0,0.0,0.0,0.0,0.0,Export,Dollars_2024
+Month,Group,COMMODITY,Unit,0.0,0.0,0.0,0.0,0.0,0.0,Import,
+Month,Group,COMMODITY,Unit,0.0,0.0,0.0,0.0,0.0,0.0,Export,Dollars_2024
+Month,Group,COMMODITY,Unit,0.0,0.0,0.0,0.0,0.0,0.0,Export,Dollars_2024
+Month,Group,COMMODITY,Unit,0.0,0.0,0.0,0.0,0.0,0.0,Import,
+Month,Group,COMMODITY,Unit,0.0,0.0,0.0,0.0,0.0,0.0,Export,Dollars_2024
+Month,Group,COMMODITY,Unit,0.0,0.0,0.0,0.0,0.0,0.0,Export,Dollars_2024
+Month,Group,COMMODITY,Unit,0.0,0.0,0.0,0.0,0.0,0.0,Export,Dollars_2024

@@ -57,13 +57,13 @@ def clean_import_file_with_groups(file_path, month_label):
 
     return df
 
-df = pd.read_csv("imports.csv")
-# june_df = clean_import_file_with_groups("Export_September_2025.xlsx", "2025-09")
-# normalize commodity name for fuzzy matching
-# Filter the DataFrame to keep rows where 'Commodity', after being split, has a length of 1
-df = df[df['Commodity'].str.upper().str.split(" ").str.len() == 1]
-# print(df.head(),(len(df['Commodity'].str.split().str[0]) == 1))
-df.to_csv("importss.csv", index=False)
+# df = pd.read_csv("imports.csv")
+# # june_df = clean_import_file_with_groups("Export_September_2025.xlsx", "2025-09")
+# # normalize commodity name for fuzzy matching
+# # Filter the DataFrame to keep rows where 'Commodity', after being split, has a length of 1
+# df = df[df['Commodity'].str.upper().str.split(" ").str.len() == 1]
+# # print(df.head(),(len(df['Commodity'].str.split().str[0]) == 1))
+# df.to_csv("importss.csv", index=False)
 
 # import pandas as pd
 
@@ -76,3 +76,15 @@ df.to_csv("importss.csv", index=False)
 # print(df[df['commodity'].str.contains('milkcream milk food for infants', case=False, na=False)][['month','rupees_2025']].sort_values('month'))
 # # print(import_data[import_data['Group'] == 'Food Group']['Rupees_2025'].max())
 # df.to_csv("trade_data.csv", index=False)
+
+import pandas as pd
+from pathlib import Path
+
+# ---- LOAD DATA ----
+# Load CSV from project root (works regardless of where script is run from)
+project_root = Path(__file__).parent.parent
+csv_file = project_root / "trade_data.csv"
+df = pd.read_csv(csv_file)
+
+df = df.sort_values(by='month')
+df.to_csv("trade_data.csv", index=False)

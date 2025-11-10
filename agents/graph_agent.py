@@ -68,7 +68,8 @@ df['month'] == '2025-06' & df['tradetype'] == 'Import'
    - Only add month filters if the user explicitly mentions months (e.g., "in June 2025").
    - If the user asks for a **trend**, include `'month'` and a **value column** (`'rupees_2025'` or `'dollar_2025'`).
    - Default to `'rupees_2025'` unless the user mentions dollar or USD.
-   
+NOte: Make sure to use the correct column names & commodities if asked for the specific query in the queries.
+
     """
         ),
         ("human", "{input}"),
